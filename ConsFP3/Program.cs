@@ -6,7 +6,13 @@ namespace ConsFP3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            MyConsole.SetupConsole();
+
+            MyConsole.CharBuffer[1,1] = '#';
+
+            MyConsole.DisplayBuffer();
+            
+            Console.ReadLine();
         }
     }
 }
