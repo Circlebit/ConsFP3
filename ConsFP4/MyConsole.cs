@@ -13,8 +13,8 @@ namespace ConsFP4
         private static ConsoleBuffer ConsoleBuffer { get; set; }
         public static byte[,] Buffer
         {
-            get { return ConsoleBuffer.CharBuffer; }
-            set { ConsoleBuffer.CharBuffer = value; }
+            get => ConsoleBuffer.CharBuffer;
+            set => ConsoleBuffer.CharBuffer = value;
         }
 
         public static void SetupConsole(short width, short height)
