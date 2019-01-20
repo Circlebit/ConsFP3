@@ -19,16 +19,11 @@ namespace ConsFP4
             while (true)
             {
                 double[] distanceToWallPerCol = rc.CastAllRays();
-                //int[] ceilingSize = new int[distanceToWallPerCol.Length];
-                //int[] floorSize = new int[distanceToWallPerCol.Length];
 
                 byte[,] newBuf = new byte[MyConsole.Width, MyConsole.Height];
 
                 for (int x = 0; x < distanceToWallPerCol.Length; x++)
                 {
-                    //ceilingSize[x] = GetCeilingSize(distanceToWallPerCol[x]);
-                    //floorSize[x] = GetFloorSize(distanceToWallPerCol[x]);
-
                     double distToWall = distanceToWallPerCol[x];
 
                     int ceilingSize = GetCeilingSize(distToWall);
@@ -38,7 +33,20 @@ namespace ConsFP4
                     {
                         if (y < ceilingSize) newBuf[x, y] = 32; // ceiling
                         else if (y >= ceilingSize && y <= floorSize) newBuf[x, y] = GetWallChar(distToWall, rc.Depth); // wall
-                        else newBuf[x, y] = 61; // floor
+                        else // Floor
+                        {
+                            byte floorShade;
+                            // Shade floor based on distance
+                            double b = 1.0f - (((double)y - MyConsole.Height / 2.0) / ((double)MyConsole.Height / 2.0));
+                            if (b < 0.25) floorShade = 35;
+                            else if (b < 0.5) floorShade = 120;
+                            else if (b < 0.75) floorShade = 46;
+                            else if (b < 0.9) floorShade = 45;
+                            else floorShade = 32;
+
+                            newBuf[x, y] = floorShade;
+
+                        }
                     }
                 }
 
@@ -181,13 +189,13 @@ namespace ConsFP4
             X = x;
             Y = y;
             A = angle;
-            Speed = 0.5;
+            Speed = 0.2;
         }
 
         public void MoveForwards()
         {
-            X += Math.Sin(DegrToRad(A) * Speed);
-            Y += Math.Cos(DegrToRad(A) * Speed);
+            X += Math.Sin(DegrToRad(A) * Speed );
+            Y += Math.Cos(DegrToRad(A) * Speed );
         }
 
         public void MoveBackwards()
@@ -198,12 +206,12 @@ namespace ConsFP4
 
         public void TurnLeft()
         {
-            A -= Speed;
+            A -= Speed * 2;
         }
 
         public void TurnRight()
         {
-            A += Speed;
+            A += Speed * 2;
         }
 
         public static double DegrToRad(double degr)
@@ -232,7 +240,7 @@ namespace ConsFP4
             String += "#              #";
             String += "#              #";
             String += "#              #";
-            String += "#              #";
+            String += "#      #       #";
             String += "#              #";
             String += "#              #";
             String += "#              #";
