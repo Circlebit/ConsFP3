@@ -10,9 +10,7 @@ namespace ConsFP4
         public static short Width { get; set; }
         public static short Height { get; set; }
 
-        private static SafeFileHandle Handle;
-        private static CharInfo[] CharBuffer;
-        private static SmallRect Rectangle;
+        public static ConsoleBuffer ConsoleBuffer { get; set; }
 
         public static void SetupConsole(short width, short height)
         {
@@ -24,35 +22,32 @@ namespace ConsFP4
 
             Console.CursorVisible = false;
 
-            Handle = CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+            ConsoleBuffer = new ConsoleBuffer(Width, Height);
 
-            if (!Handle.IsInvalid)
-            {
-                CharBuffer = new CharInfo[Width * Height];
-                Rectangle = new SmallRect() { Left = 0, Top = 0, Right = Width, Bottom = Height };
+            
 
-                for (byte character = 65; character < 65 + 26; ++character)
-                {
-                    for (short attribute = 0; attribute < 15; ++attribute)
-                    {
-                        for (int i = 0; i < CharBuffer.Length; ++i)
-                        {
-                            CharBuffer[i].Attributes = attribute;
-                            CharBuffer[i].Char.AsciiChar = 176;
-                        }
+            //if (!ConsoleBuffer.Handle.IsInvalid)
+            //{
 
-                        WriteCharBufferToConsole();
-                    }
-                }
-            }
+            //    for (byte character = 65; character < 65 + 26; ++character)
+            //    {
+            //        for (short attribute = 0; attribute < 15; ++attribute)
+            //        {
+            //            for (int i = 0; i < ConsoleBuffer.CharInfoBuffer.Length; ++i)
+            //            {
+            //                ConsoleBuffer.CharInfoBuffer[i].Attributes = attribute;
+            //                ConsoleBuffer.CharInfoBuffer[i].Char.AsciiChar = 176;
+            //            }
+
+            //            ConsoleBuffer.PrintToConsole();
+            //        }
+            //    }
+            //}
         }
 
-        private static void WriteCharBufferToConsole()
+        public static void PrintBufferToConsole()
         {
-            WriteConsoleOutput(Handle, CharBuffer,
-              new Coord() { X = Width, Y = Height },
-              new Coord() { X = 0, Y = 0 },
-              ref Rectangle);
+            ConsoleBuffer.PrintToConsole();
         }
     }
 }
