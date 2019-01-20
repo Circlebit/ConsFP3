@@ -14,4 +14,4 @@ Quick and dirty attempt to write [Javidx9's CommandLine FPS Engine](https://gith
  - No Frame Timing implemented
  - No Collision
  - Spagetthi code
- - 
+ - No decent Input
