@@ -15,47 +15,43 @@ namespace ConsFP4
             MyConsole.SetupConsole(w, h);
 
             var rc = new RayCaster();
-            double[] distanceToWallPerCol = rc.CastAllRays();
-            //int[] ceilingSize = new int[distanceToWallPerCol.Length];
-            //int[] floorSize = new int[distanceToWallPerCol.Length];
 
-            byte[,] newBuf = new byte[MyConsole.Width, MyConsole.Height];
-
-            for (int x = 0; x < distanceToWallPerCol.Length; x++)
+            while (true)
             {
-                //ceilingSize[x] = GetCeilingSize(distanceToWallPerCol[x]);
-                //floorSize[x] = GetFloorSize(distanceToWallPerCol[x]);
+                double[] distanceToWallPerCol = rc.CastAllRays();
+                //int[] ceilingSize = new int[distanceToWallPerCol.Length];
+                //int[] floorSize = new int[distanceToWallPerCol.Length];
 
-                double distToWall = distanceToWallPerCol[x];
+                byte[,] newBuf = new byte[MyConsole.Width, MyConsole.Height];
 
-                int ceilingSize = GetCeilingSize(distToWall);
-                int floorSize = GetFloorSize(distToWall);
-
-                for (int y = 0; y < MyConsole.Height; y++)
+                for (int x = 0; x < distanceToWallPerCol.Length; x++)
                 {
-                    if (y < ceilingSize) newBuf[x, y] = 126; // ceiling
-                    else if (y >= ceilingSize && y <= floorSize) newBuf[x, y] = GetWallChar(distToWall, rc.Depth); // wall
-                    else newBuf[x, y] = 61; // floor
+                    //ceilingSize[x] = GetCeilingSize(distanceToWallPerCol[x]);
+                    //floorSize[x] = GetFloorSize(distanceToWallPerCol[x]);
+
+                    double distToWall = distanceToWallPerCol[x];
+
+                    int ceilingSize = GetCeilingSize(distToWall);
+                    int floorSize = GetFloorSize(distToWall);
+
+                    for (int y = 0; y < MyConsole.Height; y++)
+                    {
+                        if (y < ceilingSize) newBuf[x, y] = 32; // ceiling
+                        else if (y >= ceilingSize && y <= floorSize) newBuf[x, y] = GetWallChar(distToWall, rc.Depth); // wall
+                        else newBuf[x, y] = 61; // floor
+                    }
                 }
+
+                MyConsole.Buffer = newBuf;
+                MyConsole.PrintBuffer();
+
+                ConsoleKeyInfo  cki = Console.ReadKey();
+                if (cki.Key == ConsoleKey.A) rc.Player.TurnLeft();
+                else if (cki.Key == ConsoleKey.D) rc.Player.TurnRight();
+                else if (cki.Key == ConsoleKey.W) rc.Player.MoveForwards();
+                else if (cki.Key == ConsoleKey.S) rc.Player.MoveBackwards();
             }
 
-            MyConsole.Buffer = newBuf;
-            MyConsole.PrintBuffer();
-
-
-            Console.ReadKey();
-            var cb = new byte[w, h];
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    int foo = 1;
-                    cb[x, y] = (byte)(176 + foo);
-                }
-            }
-            MyConsole.Buffer = cb;
-            MyConsole.PrintBuffer();
-            Console.ReadKey();
         }
 
         private static int GetCeilingSize(double distToWall)
@@ -74,10 +70,10 @@ namespace ConsFP4
         {
             // Shader walls based on distance
             byte shade = 32;
-            if (distToWall <= depth / 4.0f) shade = 176;  // Very close	
-            else if (distToWall < depth / 3.0f) shade = 177;
-            else if (distToWall < depth / 2.0f) shade = 178;
-            else if (distToWall < depth) shade = 219;
+            if (distToWall <= depth / 4.0f) shade = 219;  // Very close	
+            else if (distToWall < depth / 3.0f) shade = 178;
+            else if (distToWall < depth / 2.0f) shade = 177;
+            else if (distToWall < depth) shade = 176;
             else shade = 32;      // Too far away
             return shade;
         }
@@ -110,7 +106,7 @@ namespace ConsFP4
             get => MyConsole.Width/2.0 / Math.Tan(DegrToRad(FoV));
         }
 
-        private double DegrToRad(double degr)
+        public static double DegrToRad(double degr)
         {
             return degr * (Math.PI / 180.0);
         }
@@ -178,12 +174,41 @@ namespace ConsFP4
         /// Angle the Player is Looking into
         /// </summary>
         public double A { get; set; }
+        public double Speed { get; set; }
 
         public Player(double x, double y, double angle)
         {
             X = x;
             Y = y;
             A = angle;
+            Speed = 0.5;
+        }
+
+        public void MoveForwards()
+        {
+            X += Math.Sin(DegrToRad(A) * Speed);
+            Y += Math.Cos(DegrToRad(A) * Speed);
+        }
+
+        public void MoveBackwards()
+        {
+            X -= Math.Sin(DegrToRad(A) * Speed);
+            Y -= Math.Cos(DegrToRad(A) * Speed);
+        }
+
+        public void TurnLeft()
+        {
+            A -= Speed;
+        }
+
+        public void TurnRight()
+        {
+            A += Speed;
+        }
+
+        public static double DegrToRad(double degr)
+        {
+            return degr * (Math.PI / 180.0);
         }
     }
 
