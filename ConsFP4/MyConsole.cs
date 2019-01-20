@@ -10,7 +10,12 @@ namespace ConsFP4
         public static short Width { get; set; }
         public static short Height { get; set; }
 
-        public static ConsoleBuffer ConsoleBuffer { get; set; }
+        private static ConsoleBuffer ConsoleBuffer { get; set; }
+        public static byte[,] Buffer
+        {
+            get { return ConsoleBuffer.CharBuffer; }
+            set { ConsoleBuffer.CharBuffer = value; }
+        }
 
         public static void SetupConsole(short width, short height)
         {
@@ -45,7 +50,7 @@ namespace ConsFP4
             //}
         }
 
-        public static void PrintBufferToConsole()
+        public static void PrintBuffer()
         {
             ConsoleBuffer.PrintToConsole();
         }

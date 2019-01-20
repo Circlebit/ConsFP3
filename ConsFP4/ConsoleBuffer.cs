@@ -29,20 +29,6 @@ namespace ConsFP4
             Rectangle = new SmallRect() { Left = 0, Top = 0, Right = Width, Bottom = Height };
             CharInfoBuffer = new CharInfo[Width * Height];
             CharBuffer = new byte[Width, Height];
-
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    int foo = 0;
-                    if (y % 2 == 0) foo = 1;
-                    if (y % 3 == 0) foo = 2;
-                    if (y % 4 == 0) foo = 43;
-                    if (y % 5 == 0) foo = -176;
-                    CharBuffer[x, y] = (byte)(176 + foo);
-                }
-            }
-
         }
 
         /// <summary>

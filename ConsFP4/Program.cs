@@ -14,23 +14,24 @@ namespace ConsFP4
 
             MyConsole.SetupConsole(w, h);
 
-            MyConsole.PrintBufferToConsole();
+            MyConsole.PrintBuffer();
 
-            //var cb = new byte[w, h];
-            //for (int y = 0; y < h; y++)
-            //{
-            //    for (int x = 0; x < w; x++)
-            //    {
-            //        int foo = 0;
-            //        if (y % 2 == 0) foo = 1;
-            //        if (y % 3 == 0) foo = 2;
-            //        if (y % 4 == 0) foo = 43;
-            //        if (y % 5 == 0) foo = -176;
-            //        cb[x, y] = (byte)(176 + foo);
-            //    }
-            //}
+            Console.ReadKey();
 
-            //MyConsole.ConsoleBuffer.CharBuffer = cb;
+
+            var cb = new byte[w, h];
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    int foo = 1;
+                    cb[x, y] = (byte)(176 + foo);
+                }
+            }
+
+            MyConsole.Buffer = cb;
+
+            MyConsole.PrintBuffer();
 
             Console.ReadKey();
         }
